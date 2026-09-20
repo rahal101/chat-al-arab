@@ -21,7 +21,7 @@ const pool = process.env.DATABASE_URL
 
 app.use(helmet({ crossOriginEmbedderPolicy: false }));
 app.use(express.json({ limit: "2mb" }));
-app.use(express.static(path.join(__dirname, "..", "public")));
+app.use(express.static(__dirname));
 
 const authLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 60, standardHeaders: true, legacyHeaders: false });
 const messageLimiter = rateLimit({ windowMs: 60 * 1000, limit: 120, standardHeaders: true, legacyHeaders: false });
