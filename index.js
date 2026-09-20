@@ -368,6 +368,6 @@ io.on("connection", (socket) => {
   });
 });
 
-app.get '//splat',req, res=> res.sendFile path.join __dirname '..', 'public', 'index.html'));
+app.get('/splat', (req, res) => res.sendFile(path.join(__dirname, '..', 'public', 'index.html')));
 
 server.listen(PORT, () => console.log(`شات العرب يعمل على http://localhost:${PORT}`));
