@@ -5,8 +5,8 @@
   "description": "شات العرب - منصة دردشة عربية",
   "main": "server/index.js",
   "scripts": {
-    "start": "node server/index.js",
-    "dev": "node server/index.js"
+    "start": "node index.js",
+    "dev": "node index.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",
