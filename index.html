@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>شات العرب</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div id="auth" class="auth">
+    <div class="card auth-card">
+      <h1>شات العرب</h1>
+      <p>دردشة عربية بسيطة وسريعة وآمنة</p>
+      <div class="tabs"><button class="active" data-tab="login">دخول</button><button data-tab="register">حساب جديد</button></div>
+      <form id="loginForm">
+        <input id="login" placeholder="البريد أو اسم المستخدم" required>
+        <input id="loginPassword" type="password" placeholder="كلمة المرور" required>
+        <button class="primary">دخول</button>
+      </form>
+      <form id="registerForm" hidden>
+        <input id="regUsername" placeholder="اسم المستخدم" required minlength="3">
+        <input id="regEmail" type="email" placeholder="البريد الإلكتروني" required>
+        <input id="regPassword" type="password" placeholder="كلمة المرور - 8 أحرف على الأقل" required minlength="8">
+        <button class="primary">إنشاء الحساب</button>
+      </form>
+      <div id="authMsg" class="msg"></div>
+    </div>
+  </div>
+
+  <div id="app" hidden>
+    <header><b>🟢 شات العرب</b><span id="presenceDot">🟢</span><span id="meName"></span><select id="presence"><option value="online">متاح</option><option value="away">مشغول/بعيد</option><option value="busy">مشغول</option></select><button id="logout">خروج</button></header>
+    <main>
+      <aside class="card">
+        <h3>الغرف</h3>
+        <button class="room active" data-room="العامة">العامة</button>
+        <button class="room" data-room="مصر">🇪🇬 مصر</button>
+        <button class="room" data-room="العرب">🌍 العرب</button>
+        <hr>
+        <button id="randomBtn" class="primary">🎲 دردشة عشوائية</button>
+        <button id="profileBtn">👤 ملفي الشخصي</button><button id="friendsBtn">👥 أصدقائي</button><button id="adminBtn" hidden>🛠️ لوحة الإدارة</button>
+        <h3>المتصلون <span id="onlineCount">0</span></h3>
+        <div id="users"></div><h3>الأصدقاء</h3><div id="friends"></div>
+      </aside>
+      <section class="card chat">
+        <div id="messages" class="messages"></div>
+        <form id="sendForm" class="send"><input id="text" placeholder="اكتب رسالتك..." autocomplete="off"><button>إرسال</button></form>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="profileDialog">
+    <form method="dialog" class="card dialog-card">
+      <h2>ملفي الشخصي</h2>
+      <img id="profileAvatar" class="avatar-large" alt=""><input id="profileName" placeholder="الاسم"><input id="avatarFile" type="file" accept="image/png,image/jpeg,image/webp">
+      <textarea id="profileBio" placeholder="نبذة قصيرة"></textarea>
+      <div><button value="cancel">إلغاء</button><button id="saveProfile" class="primary" value="default">حفظ</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="randomDialog">
+    <div class="card dialog-card">
+      <h2>🎲 الدردشة العشوائية</h2>
+      <div id="randomStatus">اضغط بدء للبحث عن شخص.</div>
+      <div id="randomMessages" class="messages small"></div>
+      <form id="randomForm" class="send"><input id="randomText" placeholder="رسالة..."><button>إرسال</button></form>
+      <div class="actions"><button id="randomStart" class="primary">بدء</button><button id="randomNext">شخص آخر</button><button id="randomStop">إنهاء</button><button id="randomClose">إغلاق</button></div>
+    </div>
+  </dialog>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/app.js"></script>
+<script src="/admin.js"></script><dialog id="friendsDialog"><div class="card dialog-card"><h2>👥 أصدقائي</h2><div id="friendsList"></div><button id="friendsClose">إغلاق</button></div></dialog><dialog id="privateDialog"><div class="card dialog-card"><h2 id="privateTitle">محادثة خاصة</h2><div id="privateMessages" class="messages small"></div><form id="privateForm" class="send"><input id="privateText" placeholder="اكتب رسالة خاصة..."><button>إرسال</button></form><input id="privateImage" type="file" accept="image/png,image/jpeg,image/webp"><div class="actions"><button id="videoCall" class="primary">📹 فيديو</button><button id="privateClose">إغلاق</button></div></div></dialog><script src="/private.js"></script>
+<dialog id="videoDialog"><div class="card dialog-card video-card">
+  <h2 id="videoTitle">📹 مكالمة فيديو</h2>
+  <div class="video-grid"><video id="localVideo" autoplay muted playsinline></video><video id="remoteVideo" autoplay playsinline></video></div>
+  <div class="actions"><button id="videoMute">🔇 كتم</button><button id="videoCamera">📷 إيقاف الكاميرا</button><button id="videoEnd" class="primary">🛑 إنهاء</button></div>
+</div></dialog>
+</body>
+</html>

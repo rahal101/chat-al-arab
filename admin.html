@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>لوحة إدارة شات العرب</title><link rel="stylesheet" href="/style.css"></head>
+<body>
+<header><b>🛠️ لوحة إدارة شات العرب</b><a href="/" style="margin-right:auto">العودة للشات</a></header>
+<main style="display:block;max-width:1200px">
+<section class="card">
+<h2>البلاغات</h2><div id="reports">جاري التحميل...</div>
+</section>
+<section class="card" style="margin-top:15px">
+<h2>الأعضاء</h2><div id="members">جاري التحميل...</div>
+</section>
+</main>
+<script>
+const token=localStorage.getItem("chatArabToken");
+const headers={Authorization:"Bearer "+token,"Content-Type":"application/json"};
+async function getMe(){const r=await fetch("/api/me",{headers}); if(!r.ok) throw Error(); return r.json();}
+async function load(){
+ try{const me=await getMe(); if(me.role!=="admin") throw Error("غير مصرح");
+ const [rr,ur]=await Promise.all([fetch("/api/admin/reports",{headers}),fetch("/api/admin/users",{headers})]);
+ const reports=await rr.json(), users=await ur.json();
+ document.querySelector("#reports").innerHTML=reports.length?reports.map(x=>`
+ <div class="user"><b>#${x.id}</b> — ${esc(x.reporter)} بلّغ عن ${esc(x.reported)}<br>${esc(x.reason)}
+ <br><small>${x.status}</small>
+ <button onclick="status(${x.id},'reviewed')">مراجعة</button>
+ <button onclick="status(${x.id},'closed')">إغلاق</button></div>`).join(""):"لا توجد بلاغات";
+ document.querySelector("#members").innerHTML=users.map(x=>`
+ <div class="user"><b>${esc(x.username)}</b> — ${esc(x.email)}
+ <span> ${x.is_banned?"🚫 محظور":"🟢 نشط"}</span>
+ ${x.role!=="admin"?`<button onclick="ban(${x.id},${!x.is_banned})">${x.is_banned?"فك الحظر":"حظر"}</button>`:""}</div>`).join("");
+ }catch(e){document.body.innerHTML='<div class="auth"><div class="card auth-card"><h2>غير مصرح</h2><p>هذه الصفحة للمشرف فقط.</p><a href="/">العودة</a></div></div>';}
+}
+function esc(v){const d=document.createElement("div");d.textContent=v;return d.innerHTML}
+async function status(id,status){await fetch("/api/admin/reports/"+id,{method:"PATCH",headers,body:JSON.stringify({status})});load();}
+async function ban(id,banned){await fetch("/api/admin/users/"+id+"/ban",{method:"PATCH",headers,body:JSON.stringify({banned})});load();}
+load();
+</script></body></html>
